@@ -43,8 +43,7 @@ def chatting(message):
         bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
         mycursor.execute(f"SELECT teleid FROM users")
         people = mycursor.fetchall
-        person = random.choice(people)
-
+        bot.send_message(message.chat.id, people)
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
 def redirect_message():
