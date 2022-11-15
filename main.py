@@ -22,6 +22,8 @@ mycursor = mydb.cursor()
 
 @bot.message_handler(commands=["start"])
 def start(message):
+    service = telebot.types.ReplyKeyboardMarkup(True, True)
+    service.row('Начать')
     user_id = message.from_user.id
     user_name = message.from_user.username
     bot.reply_to(message, f"Hello, {message.from_user.first_name}!")
