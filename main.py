@@ -26,13 +26,22 @@ def start(message):
     service.row('Начать')
     user_id = message.from_user.id
     user_name = message.from_user.username
-    bot.reply_to(message, f"Hello, {message.from_user.first_name}!")
-    bot.send_message(message.chat.id, 'Нажмите "Начать", чтоб начать общение')
+    send = bot.send_message(message.chat.id, f"Hello, {message.from_user.first_name}! Нажмите Начать, чтоб начать общение", reply_markup=service)
+    bot.register_next_step_handler(send, chatting)
     mycursor.execute(f"SELECT teleid FROM users WHERE teleid = {user_id}")
     result = mycursor.fetchone()
     if not result:
         mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant) VALUES ({user_id}, '{user_name}', False, False)")
         mydb.commit()
+
+def chatting(message):
+    if(message.text = "Начать"):
+        a = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
+        mycursor.execute(f"SELECT teleid FROM users")
+        people = mycursor.fetchall
+        person = random.choice(people)
+
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
 def redirect_message():
