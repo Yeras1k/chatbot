@@ -26,13 +26,15 @@ def start(message):
     service.row('Начать')
     user_id = message.from_user.id
     user_name = message.from_user.username
-    send = bot.send_message(message.chat.id, f"Hello, {message.from_user.first_name}! Нажмите Начать, чтоб начать общение", reply_markup=service)
-    bot.register_next_step_handler(send, chatting)
     mycursor.execute(f"SELECT teleid FROM users WHERE teleid = {user_id}")
     result = mycursor.fetchone()
     if not result:
         mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant) VALUES ({user_id}, '{user_name}', False, False)")
         mydb.commit()
+    else:
+        continue
+    send = bot.send_message(message.chat.id, f"Hello, {message.from_user.first_name}! Нажмите Начать, чтоб начать общение", reply_markup=service)
+    bot.register_next_step_handler(send, chatting)
 
 def chatting(message):
     if message.text = "Начать":
