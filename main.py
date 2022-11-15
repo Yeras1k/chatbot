@@ -52,7 +52,7 @@ def chat(message):
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('Закончить')
     msg = bot.send_message(person, message.text)
-    bot.register_next_step_handler(send, chat)
+    bot.register_next_step_handler(msg, chat)
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
