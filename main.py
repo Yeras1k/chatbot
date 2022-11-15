@@ -43,7 +43,8 @@ def chatting(message):
         bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
         mycursor.execute(f"SELECT teleid FROM users ")
         people = mycursor.fetchall()
-        global person = random.choice(people[0])
+        global person
+        person = random.choice(people[0])
         send = bot.send_message(message.from_user.id, 'Можете писать')
         bot.register_next_step_handler(send, chat)
 
