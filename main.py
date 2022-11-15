@@ -37,7 +37,7 @@ def start(message):
     bot.register_next_step_handler(send, chatting)
 
 def chatting(message):
-    if message.text = "Начать":
+    if message.text == "Начать":
         a = telebot.types.ReplyKeyboardRemove()
         bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
         mycursor.execute(f"SELECT teleid FROM users")
