@@ -27,7 +27,7 @@ def start(message):
     bot.reply_to(message, f"Hello, {message.from_user.first_name}!")
     bot.send_message(message.chat.id, 'Нажмите "Начать", чтоб начать общение')
     mycursor.execute(f"SELECT teleid FROM users WHERE teleid = {user_id}")
-    result = db_object.fetchone()
+    result = mycursor.fetchone()
     if not result:
         mycursor.execute(f"INSERT INTO users(teleid, name, isActive, isWant) VALUES ({user_id}, {user_name}, False, False)")
         mydb.commit()
