@@ -29,7 +29,7 @@ def start(message):
     mycursor.execute(f"SELECT teleid FROM users WHERE teleid = {user_id}")
     result = mycursor.fetchone()
     if not result:
-        mycursor.execute(f"INSERT INTO users(teleid, name, isActive, isWant) VALUES ({user_id}, {user_name}, False, False)")
+        mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant) VALUES ({user_id}, {user_name}, False, False)")
         mydb.commit()
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
