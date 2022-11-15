@@ -42,7 +42,7 @@ def chatting(message):
         a = telebot.types.ReplyKeyboardRemove()
         bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
         mycursor.execute(f"SELECT teleid FROM users")
-        people = mycursor.fetchall
+        people = mycursor.fetchall()
         person = random.choice(people[0])
         bot.send_message(message.chat.id, person)
 
