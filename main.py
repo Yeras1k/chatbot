@@ -41,10 +41,18 @@ def chatting(message):
     if message.text == "Начать":
         a = telebot.types.ReplyKeyboardRemove()
         bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
-        mycursor.execute(f"SELECT teleid FROM users")
+        mycursor.execute(f"SELECT teleid FROM users ")
         people = mycursor.fetchall()
         person = random.choice(people[0])
-        bot.send_message(message.chat.id, person)
+        send = bot.send_message(message.from_user.id, 'Можете писать', reply_markup=a)
+        bot.register_next_step_handler(send, chat)
+
+def chat(message):
+    service = telebot.types.ReplyKeyboardMarkup(True, True)
+    service.row('Закончить')
+    msg = bot.send_message(person, message.text)
+    bot.register_next_step_handler(send, chat)
+
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
 def redirect_message():
