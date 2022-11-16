@@ -85,8 +85,6 @@ def chat(message):
         msg = bot.send_message(person, "Собеседник решил закончить разговор! Нажмите Закончить")
         bot.register_next_step_handler(msg, start)
     else:
-        service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('Закончить')
         msg = bot.send_message(person, message.text, reply_markup=service)
         bot.register_next_step_handler(msg, chat)
 
