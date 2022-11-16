@@ -21,7 +21,6 @@ mydb = mysql.connector.connect(
 )
 mycursor = mydb.cursor()
 
-
 @bot.message_handler(commands=["start"])
 def start(message):
     service = telebot.types.ReplyKeyboardMarkup(True, True)
@@ -38,6 +37,7 @@ def start(message):
         mydb.commit()
     send = bot.send_message(message.chat.id, f"Hello, {message.from_user.first_name}! Нажмите Начать, чтоб начать общение", reply_markup=service)
     bot.register_next_step_handler(send, chatting)
+
 
 def chatting(message):
     if message.text == "Начать":
@@ -58,6 +58,7 @@ def chatting(message):
             person = random.choice(people[0])
             send = bot.send_message(message.from_user.id, 'Можете писать')
             bot.register_next_step_handler(send, chat)
+
 
 def chat(message):
     if message.text == "Закончить":
