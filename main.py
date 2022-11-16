@@ -21,6 +21,7 @@ mydb = mysql.connector.connect(
 )
 mycursor = mydb.cursor()
 
+
 @bot.message_handler(commands=["start"])
 def start(message):
     service = telebot.types.ReplyKeyboardMarkup(True, True)
