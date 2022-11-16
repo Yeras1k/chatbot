@@ -58,7 +58,7 @@ def chatting(message):
             bot.register_next_step_handler(send, chat)
 
 def chat(message):
-    if message.text = "Закончить":
+    if message.text == "Закончить":
         a = telebot.types.ReplyKeyboardRemove()
         msg = bot.send_message(person, message.text, reply_markup=service)
         bot.register_next_step_handler(msg, start)
