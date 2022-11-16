@@ -11,7 +11,7 @@ bot = telebot.TeleBot(BOT_TOKEN)
 server = Flask(__name__)
 logger = telebot.logger
 logger.setLevel(logging.DEBUG)
-
+db = Database('db.db')
 @bot.message_handler(commands=["start"])
 def start(message):
     user_name = message.from_user.username
@@ -32,7 +32,7 @@ def bot_message(message):
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
 
-            add_queue(message.chat.id)
+            db.add_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
