@@ -27,7 +27,7 @@ def add_queue(chat_id):
 def delete_queue(chat_id):
     mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}")
     mydb.commit()
-def get_chat(user_id):
+def get_chat():
     mycursor.execute(f"SELECT * FROM queue")
     result = mycursor.fetchmany(1)
     if len(result)>0:
