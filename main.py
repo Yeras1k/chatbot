@@ -29,7 +29,7 @@ def delete_queue(chat_id):
     mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}")
     mydb.commit()
 def get_chat():
-    mycursor.execute(f"SELECT * FROM queue")
+    mycursor.execute("SELECT * FROM queue")
     result = mycursor.fetchmany(1)
     if len(result)>0:
         for row in result:
@@ -45,7 +45,7 @@ def create_chat(chat_one, chat_two):
         return False
 def get_active_chat(chat_id):
     mycursor.execute(f"SELECT * FROM chats WHERE chat_one = {chat_id}")
-    chat = mycursor.fetchmany(1)
+    chat = mycursor.fetchall()
     id_chat = 0
     for row in chat:
         is_chat = row[0]
