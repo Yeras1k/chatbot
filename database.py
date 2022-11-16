@@ -1,15 +1,6 @@
 import mysql.connector
 import os
 
-mydb = mysql.connector.connect(
-    host = os.environ.get('MYSQLHOST'),
-    port = os.environ.get('MYSQLPORT'),
-    user = os.environ.get('MYSQLUSER'),
-    password = os.environ.get('MYSQLPASSWORD'),
-    database = os.environ.get('MYSQLDATABASE')
-)
-mycursor = mydb.cursor()
-
 class Database:
     def __init__(self):
         self.connection = self.connect(
