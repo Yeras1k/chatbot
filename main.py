@@ -28,9 +28,9 @@ def delete_queue(chat_id):
     mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}")
     mydb.commit()
 def get_chat(user_id):
-    mycursor.execute(f"SELECT * FROM queue WHERE teleid != {user_id}")
+    mycursor.execute(f"SELECT * FROM queue")
     result = mycursor.fetchmany(1)
-    if(bool(len(result))):
+    if len(result)>0:
         for row in result:
             return(row[1])
     else:
@@ -96,7 +96,7 @@ def bot_message(message):
         if message.text == 'Поиск собеседника':
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
-            chat_two = get_chat(message.chat.id)
+            chat_two = get_chat()
             if create_chat(message.chat.id, chat_two) == False:
                 add_queue(message.chat.id)
                 bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
