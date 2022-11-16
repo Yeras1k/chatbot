@@ -2,7 +2,7 @@ import os
 import telebot
 import logging
 import random
-from database import Database
+from database.py import Database
 from telebot import types
 from config import *
 from flask import Flask, request
