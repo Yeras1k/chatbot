@@ -13,10 +13,10 @@ logger = telebot.logger
 logger.setLevel(logging.DEBUG)
 
 mydb = mysql.connector.connect(
-    host = "containers-us-west-103.railway.app",
-    port = "6293",
+    host = "containers-us-west-115.railway.app",
+    port = "5990",
     user = "root",
-    password = "IOeQHj8jE6io4OQYTh3T",
+    password = "pla4qKerLWls1m87aKAa",
     database = "railway"
 )
 mycursor = mydb.cursor()
