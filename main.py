@@ -80,6 +80,7 @@ def chatting(message):
 
 
 def chat(message):
+    bot.send_message(message.from_user.id, 'Ты в чате')
     if message.text == "Закончить":
         msg = bot.send_message(person, "Собеседник решил закончить разговор! Нажмите Закончить")
         bot.register_next_step_handler(msg, start)
