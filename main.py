@@ -42,6 +42,49 @@ def create_chat(chat_one, chat_two):
         return True
     else:
         return False
+def get_active_chat(chat_id):
+    chat = mycursor.execute(f"SELECT * FROM chats WHERE chat_one = {chat_id}")
+    id_chat = 0
+    for row in chat:
+        is_chat = row[0]
+        chat_info = [row[0], row[2]]
+    if id_chat == 0:
+        chat = mycursor.execute(f"SELECT * FROM chats WHERE chat_two = {chat_id}")
+        for row in chat:
+            is_chat = row[0]
+            chat_info = [row[0], row[1]]
+        if id_chat == 0:
+            return False
+        else:
+            return chat_info
+    else:
+        return chat_info
+def delete_chat(id_chat):
+    mycursor.execute(f"DELETE FROM chats WHERE id = {id}")
+    mydb.commit()
+
+
+
+
+
+
+
+
+
+
+
+@bot.message_handler(commands=["stop"])
+def stop(message):
+    chat_info = get_active_chat(message.chat.id)
+    if chat_info != False:
+        delete_chat(chat_info[0])
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Поиск собеседника')
+        bot.send_message(chat_info[1], 'Собеседник покуинул чат', reply_markup = service)
+        bot.send_message(message.chat.id, 'Вы вышли из чата', reply_markup = service)
+    else:
+        bot.send_message(message.chat.id, 'Вы не создавали чат', reply_markup = service)
+
 
 @bot.message_handler(commands=["start"])
 def start(message):
