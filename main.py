@@ -41,9 +41,7 @@ def start(message):
 
 def chatting(message):
     if message.text == "Начать":
-        user_id = message.from_user.id
-        a = telebot.types.ReplyKeyboardRemove()
-        bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
+        bot.send_message(message.from_user.id, 'Ищем...')
         mycursor.execute(f"UPDATE users SET isWant = True WHERE teleid = {user_id}")
         mydb.commit()
         mycursor.execute(f"SELECT teleid FROM users WHERE teleid NOT IN ({user_id}) AND isActive = 0 AND isWant = 1 AND chat = 0")
@@ -52,7 +50,7 @@ def chatting(message):
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Начать')
             send = bot.send_message(message.chat.id, f"Собеседник не найден! Попробуйте снова", reply_markup=service)
-            bot.register_next_step_handler(send, start)
+            bot.register_next_step_handler(send, chatting)
         else:
             global person
             person = random.choice(people[0])
