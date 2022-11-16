@@ -63,7 +63,6 @@ def delete_chat(id_chat):
     mycursor.execute(f"DELETE FROM chats WHERE id = {id}")
     mydb.commit()
 
-
 @bot.message_handler(commands=["stop"])
 def stop(message):
     chat_info = get_active_chat(message.chat.id)
