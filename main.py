@@ -28,7 +28,7 @@ def delete_queue(chat_id):
     mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}")
     mydb.commit()
 def get_chat(user_id):
-    mycursor.execute(f"SELECT teleid FROM queue WHERE teleid != {user_id}")
+    mycursor.execute(f"SELECT * FROM queue WHERE teleid != {user_id}")
     result = mycursor.fetchmany(1)
     if(bool(len(result))):
         for row in result:
@@ -60,8 +60,23 @@ def get_active_chat(chat_id):
     else:
         return chat_info
 def delete_chat(id_chat):
-    mycursor.execute(f"DELETE FROM chats WHERE id = {id}")
+    mycursor.execute(f"DELETE FROM chats WHERE id = {id_chat}")
     mydb.commit()
+
+
+@bot.message_handler(commands=["start"])
+def start(message):
+    user_name = message.from_user.username
+    service = telebot.types.ReplyKeyboardMarkup(True, True)
+    service.row('Поиск собеседника')
+    bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника".format(message.from_user), reply_markup = service)
+
+
+@bot.message_handler(commands=["menu"])
+def menu(message):
+    service = telebot.types.ReplyKeyboardMarkup(True, True)
+    service.row('Поиск собеседника')
+    bot.send_message(message.chat.id, 'Меню'.format(message.from_user), reply_markup = service)
 
 @bot.message_handler(commands=["stop"])
 def stop(message):
@@ -75,22 +90,6 @@ def stop(message):
     else:
         bot.send_message(message.chat.id, 'Вы не создавали чат', reply_markup = service)
 
-
-@bot.message_handler(commands=["start"])
-def start(message):
-    user_name = message.from_user.username
-    service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('Поиск собеседника')
-    bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника", reply_markup = service)
-
-
-@bot.message_handler(commands=["menu"])
-def menu(message):
-    service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('Поиск собеседника')
-    bot.send_message(message.chat.id, 'Меню'.format(message.from_user), reply_markup = service)
-
-
 @bot.message_handler(content_types=["text"])
 def bot_message(message):
     if message.chat.type == 'private':
@@ -98,16 +97,16 @@ def bot_message(message):
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
             chat_two = get_chat(message.chat.id)
-            if(create_chat(message.chat.id, chat_two) == False):
+            if create_chat(message.chat.id, chat_two) == False:
                 add_queue(message.chat.id)
                 bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
             else:
+                mess = 'Собеседник найден! Нажмите /stop чтоб закончить диалог'
                 service = telebot.types.ReplyKeyboardMarkup(True, True)
                 service.row('/stop')
-                mess = 'Собеседник найден! Нажмите /stop чтоб закончить диалог'
                 bot.send_message(message.chat.id, mess, reply_markup = service)
                 bot.send_message(chat_two, mess, reply_markup = service)
-        if message.text == 'Остановить поиск':
+        elif message.text == 'Остановить поиск':
             delete_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
     else:
