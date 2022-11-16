@@ -21,5 +21,5 @@ class Database:
         )
         self.cursor = self.connection.cursor()
     def add_queue(self, chat_id):
-        mycursor.execute(f"INSERT INTO users(teleid) VALUES (%i)", (chat_id))
+        mycursor.execute(f"INSERT INTO queue(teleid) VALUES (%i)", (chat_id))
         mydb.commit()
