@@ -56,8 +56,23 @@ def chatting(message):
         else:
             global person
             person = random.choice(people[0])
-            send = bot.send_message(message.from_user.id, 'Можете писать')
-            bot.register_next_step_handler(send, chat)
+            mycursor.execute(f"UPDATE users SET temp = {person} WHERE teleid = {user_id}")
+            mydb.commit()
+            mycursor.execute(f"SELECT temp FROM users WHERE teleid = {person}")
+            second = mycursor.fetchone()
+            if second != user_id:
+                mycursor.execute(f"UPDATE users SET temp = {user_id} WHERE teleid = {person}")
+                mycursor.execute(f"UPDATE users SET chat = {person} WHERE teleid = {user_id}")
+                mycursor.execute(f"UPDATE users SET chat = {user_id} WHERE teleid = {person}")
+                mydb.commit()
+                send = bot.send_message(message.from_user.id, 'Можете писать')
+                bot.register_next_step_handler(send, chat)
+            else:
+                mycursor.execute(f"UPDATE users SET chat = {person} WHERE teleid = {user_id}")
+                mycursor.execute(f"UPDATE users SET chat = {user_id} WHERE teleid = {person}")
+                mydb.commit()
+                send = bot.send_message(message.from_user.id, 'Можете писать')
+                bot.register_next_step_handler(send, chat)
 
 
 def chat(message):
