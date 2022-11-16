@@ -11,7 +11,7 @@ bot = telebot.TeleBot(BOT_TOKEN)
 server = Flask(__name__)
 logger = telebot.logger
 logger.setLevel(logging.DEBUG)
-db = Database('db.db')
+db = Database('db')
 @bot.message_handler(commands=["start"])
 def start(message):
     user_name = message.from_user.username
