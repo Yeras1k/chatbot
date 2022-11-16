@@ -22,7 +22,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 def add_queue(chat_id):
-    mycursor.execute(f"INSERT INTO queue(uteleid) VALUES({chat_id})")
+    mycursor.execute(f"INSERT INTO queue(teleid) VALUES({chat_id})")
     mydb.commit()
 
 @bot.message_handler(commands=["start"])
