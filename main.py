@@ -28,7 +28,7 @@ def start(message):
     service.row('Начать', 'Отмена')
     user_id = message.from_user.id
     user_name = message.from_user.username
-    mycursor.execute(f"SELECT teleid FROM users WHERE teleid = {user_id}")
+    mycursor.execute(f"SELECT teleid FROM 'users' WHERE teleid = {user_id}")
     result = mycursor.fetchone()
     if not result:
         mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant, chat) VALUES ({user_id}, '{user_name}', False, False, 0)")
@@ -43,8 +43,8 @@ def chatting(message):
         user_id = message.from_user.id
         a = telebot.types.ReplyKeyboardRemove()
         bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
-        mycursor.execute(f"UPDATE users SET isWant = 1 WHERE teleid = {user_id}")
-        mycursor.execute(f"SELECT teleid FROM users WHERE teleid != {user_id}, isActive = `False`, isWant = `True`, chat = 0")
+        mycursor.execute(f"UPDATE 'users' SET isWant = 1 WHERE teleid = {user_id}")
+        mycursor.execute(f"SELECT teleid FROM 'users' WHERE teleid != {user_id}, isActive = 0, isWant = 1, chat = 0")
         people = mycursor.fetchall()
         if not people:
             service = telebot.types.ReplyKeyboardMarkup(True, True)
