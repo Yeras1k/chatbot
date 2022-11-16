@@ -30,7 +30,7 @@ def start(message):
     mycursor.execute(f"SELECT teleid FROM users WHERE teleid = {user_id}")
     result = mycursor.fetchone()
     if not result:
-        mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant, chat) VALUES ({user_id}, '{user_name}', False, False, 0)")
+        mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant, chat, temp) VALUES ({user_id}, '{user_name}', False, False, 0, 0)")
         mydb.commit()
     else:
         mycursor.execute(f"UPDATE users SET isWant = False WHERE teleid = {user_id}")
