@@ -14,10 +14,10 @@ logger.setLevel(logging.DEBUG)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    user_name = message.from_user.first_name
+    user_name = message.from_user.username
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('Поиск собеседника')
-    bot.send_message(message.chat.is, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника", reply_markup = service)
+    bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника", reply_markup = service)
 
 @bot.message_handler(commands=["menu"])
 def menu(message):
