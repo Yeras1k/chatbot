@@ -49,7 +49,7 @@ def chatting(message):
         mydb.commit()
         mycursor.execute(f"SELECT teleid FROM users WHERE teleid NOT IN ({user_id}) AND isActive = 0 AND isWant = 1 AND chat = 0")
         people = mycursor.fetchall()
-        bot.send_message(message.from_user.id, f'{people}')
+        bot.send_message(message.from_user.id, f'{people[0]}')
         if not people:
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Начать')
