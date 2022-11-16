@@ -40,7 +40,6 @@ def start(message):
     send = bot.send_message(message.chat.id, f"Hello, {message.from_user.first_name}! Нажмите Начать, чтоб начать общение", reply_markup=service)
     bot.register_next_step_handler(send, chatting)
 
-
 def chatting(message):
     if message.text == "Начать":
         user_id = message.from_user.id
