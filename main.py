@@ -64,15 +64,6 @@ def delete_chat(id_chat):
     mydb.commit()
 
 
-
-
-
-
-
-
-
-
-
 @bot.message_handler(commands=["stop"])
 def stop(message):
     chat_info = get_active_chat(message.chat.id)
@@ -80,7 +71,7 @@ def stop(message):
         delete_chat(chat_info[0])
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Поиск собеседника')
-        bot.send_message(chat_info[1], 'Собеседник покуинул чат', reply_markup = service)
+        bot.send_message(chat_info[1], 'Собеседник покунул чат', reply_markup = service)
         bot.send_message(message.chat.id, 'Вы вышли из чата', reply_markup = service)
     else:
         bot.send_message(message.chat.id, 'Вы не создавали чат', reply_markup = service)
@@ -93,11 +84,13 @@ def start(message):
     service.row('Поиск собеседника')
     bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника", reply_markup = service)
 
+
 @bot.message_handler(commands=["menu"])
 def menu(message):
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('Поиск собеседника')
     bot.send_message(message.chat.id, 'Меню'.format(message.from_user), reply_markup = service)
+
 
 @bot.message_handler(content_types=["text"])
 def bot_message(message):
@@ -105,9 +98,7 @@ def bot_message(message):
         if message.text == 'Поиск собеседника':
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
-
             chat_two = get_chat()
-
             if(create_chat(message.chat.id, chat_two) == False):
                 add_queue(message.chat.id)
                 bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
@@ -117,10 +108,12 @@ def bot_message(message):
                 mess = 'Собеседник найден! Нажмите /stop чтоб закончить диалог'
                 bot.send_message(message.chat.id, mess, reply_markup = service)
                 bot.send_message(chat_two, mess, reply_markup = service)
-
         if message.text == 'Остановить поиск':
             delete_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
+    else:
+        chat_info = get_active_chat(message.chat.id)
+        bot.send_message(chat_info[1], message.text)
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
