@@ -27,6 +27,20 @@ def add_queue(chat_id):
 def delete_queue(chat_id):
     mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}")
     mydb.commit()
+def get_chat():
+    result = mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}").fetchmany(1)
+    if(bool(len(result))):
+        for row in result:
+            return(row[1])
+    else:
+        return False
+def create_chat(chat_one, chat_two):
+    if chat_two != 0:
+        mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_two}")
+        mycursor.execute(f"INSERT INTO chats(chat_one, chat_two) VALUES({chat_one}, {chat_two})")
+        return True
+    else:
+        return False
 
 @bot.message_handler(commands=["start"])
 def start(message):
@@ -48,13 +62,23 @@ def bot_message(message):
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
 
-            add_queue(message.chat.id)
-            bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
+            chat_two = get_chat()
+
+            if(create_chat(message.chat.id, chat_two) == False):
+                add_queue(message.chat.id)
+                bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
+            else:
+                service = telebot.types.ReplyKeyboardMarkup(True, True)
+                service.row('/stop')
+                mess = 'Собеседник найден! Нажмите /stop чтоб закончить диалог'
+                bot.send_message(message.chat.id, mess, reply_markup = service)
+                bot.send_message(chat_two, mess, reply_markup = service)
+
         if message.text == 'Остановить поиск':
             delete_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
 
-            
+
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
 def redirect_message():
     json_string = request.get_data().decode("utf-8")
