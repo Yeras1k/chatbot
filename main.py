@@ -56,6 +56,8 @@ def chatting(message):
             send = bot.send_message(message.chat.id, f"Собеседник не найден! Попробуйте снова", reply_markup=service)
             bot.register_next_step_handler(send, chatting)
         else:
+            service = telebot.types.ReplyKeyboardMarkup(True, True)
+            service.row('Закончить')
             global person
             person = random.choice(people[0])
             mycursor.execute(f"UPDATE users SET temp = {person} WHERE teleid = {user_id}")
@@ -73,14 +75,13 @@ def chatting(message):
                 mycursor.execute(f"UPDATE users SET chat = {person} WHERE teleid = {user_id}")
                 mycursor.execute(f"UPDATE users SET chat = {user_id} WHERE teleid = {person}")
                 mydb.commit()
-                send = bot.send_message(message.from_user.id, 'Можете писать')
+                send = bot.send_message(message.from_user.id, 'Можете писать', reply_markup=service)
                 bot.register_next_step_handler(send, chat)
 
 
 def chat(message):
     if message.text == "Закончить":
-        a = telebot.types.ReplyKeyboardRemove()
-        msg = bot.send_message(person, "Собеседник решил закончить разговор! Нажмите Закончить", reply_markup=service)
+        msg = bot.send_message(person, "Собеседник решил закончить разговор! Нажмите Закончить")
         bot.register_next_step_handler(msg, start)
     else:
         service = telebot.types.ReplyKeyboardMarkup(True, True)
