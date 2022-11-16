@@ -2,7 +2,6 @@ import os
 import telebot
 import logging
 import random
-from database import Database
 from telebot import types
 from config import *
 from flask import Flask, request
@@ -11,7 +10,20 @@ bot = telebot.TeleBot(BOT_TOKEN)
 server = Flask(__name__)
 logger = telebot.logger
 logger.setLevel(logging.DEBUG)
-db = Database('db')
+
+mydb = mysql.connector.connect(
+    host = os.environ.get('MYSQLHOST'),
+    port = os.environ.get('MYSQLPORT'),
+    user = os.environ.get('MYSQLUSER'),
+    password = os.environ.get('MYSQLPASSWORD'),
+    database = os.environ.get('MYSQLDATABASE')
+)
+mycursor = mydb.cursor()
+
+def add_queue(chat_id):
+    mycursor.execute(f"INSERT INTO queue(uteleid) VALUES(%i)", (chat_id))
+    mydb.commit()
+
 @bot.message_handler(commands=["start"])
 def start(message):
     user_name = message.from_user.username
@@ -32,7 +44,7 @@ def bot_message(message):
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
 
-            db.add_queue(message.chat.id)
+            add_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
