@@ -43,8 +43,8 @@ def chatting(message):
         user_id = message.from_user.id
         a = telebot.types.ReplyKeyboardRemove()
         bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
-        mycursor.execute(f"UPDATE users SET isWant = True WHERE teleid = {user_id}")
-        mycursor.execute(f"SELECT teleid FROM users WHERE chat = 0, isWant = True, isActive = False, teleid != {user_id}")
+        mycursor.execute(f"UPDATE users SET isWant = 1 WHERE teleid = {user_id}")
+        mycursor.execute(f"SELECT teleid FROM users WHERE chat = 0, isWant = 1, isActive = 0, teleid != {user_id}")
         people = mycursor.fetchall()
         if not people:
             service = telebot.types.ReplyKeyboardMarkup(True, True)
