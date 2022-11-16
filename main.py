@@ -32,9 +32,11 @@ def start(message):
     if not result:
         mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant, chat, temp) VALUES ({user_id}, '{user_name}', False, False, 0, 0)")
         mydb.commit()
+        bot.send_message(message.from_user.id, 'Плохо')
     else:
         mycursor.execute(f"UPDATE users SET isWant = False AND chat = 0 AND temp = 0 WHERE teleid = {user_id}")
         mydb.commit()
+        bot.send_message(message.from_user.id, 'Хорошо')
     send = bot.send_message(message.chat.id, f"Hello, {message.from_user.first_name}! Нажмите Начать, чтоб начать общение", reply_markup=service)
     bot.register_next_step_handler(send, chatting)
 
