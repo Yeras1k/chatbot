@@ -41,6 +41,7 @@ def start(message):
 
 def chatting(message):
     if message.text == "Начать":
+        user_id = message.from_user.id
         bot.send_message(message.from_user.id, 'Ищем...')
         mycursor.execute(f"UPDATE users SET isWant = True WHERE teleid = {user_id}")
         mydb.commit()
