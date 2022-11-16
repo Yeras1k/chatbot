@@ -24,6 +24,9 @@ mycursor = mydb.cursor()
 def add_queue(chat_id):
     mycursor.execute(f"INSERT INTO queue(teleid) VALUES({chat_id})")
     mydb.commit()
+def delete_queue(chat_id):
+    mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}")
+    mydb.commit()
 
 @bot.message_handler(commands=["start"])
 def start(message):
