@@ -34,7 +34,7 @@ def start(message):
         mydb.commit()
         bot.send_message(message.from_user.id, 'Плохо')
     else:
-        mycursor.execute(f"UPDATE users SET isWant = False AND chat = 0 AND temp = 0 WHERE teleid = {user_id}")
+        mycursor.execute(f"UPDATE users SET isWant = False, chat = 0, temp = 0 WHERE teleid = {user_id}")
         mydb.commit()
         bot.send_message(message.from_user.id, 'Хорошо')
     send = bot.send_message(message.chat.id, f"Hello, {message.from_user.first_name}! Нажмите Начать, чтоб начать общение", reply_markup=service)
