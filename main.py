@@ -50,7 +50,11 @@ def bot_message(message):
 
             add_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
+        if message.text == 'Остановить поиск':
+            delete_queue(message.chat.id)
+            bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
 
+            
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
 def redirect_message():
     json_string = request.get_data().decode("utf-8")
