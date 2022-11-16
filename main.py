@@ -51,7 +51,7 @@ def chatting(message):
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Начать')
             send = bot.send_message(message.chat.id, f"Собеседник не найден! Попробуйте снова", reply_markup=service)
-            bot.register_next_step_handler(send, chatting)
+            bot.register_next_step_handler(send, start)
         else:
             global person
             person = random.choice(people[0])
