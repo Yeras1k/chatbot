@@ -68,7 +68,7 @@ def delete_chat(id_chat):
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    def delete_queue(message.chat.id):
+    delete_queue(message.chat.id):
     user_name = message.from_user.username
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('Поиск собеседника')
