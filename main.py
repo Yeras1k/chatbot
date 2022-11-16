@@ -24,13 +24,13 @@ mycursor = mydb.cursor()
 @bot.message_handler(commands=["start"])
 def start(message):
     service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('Начать')
+    service.row('Начать', 'Отмена')
     user_id = message.from_user.id
     user_name = message.from_user.username
     mycursor.execute(f"SELECT teleid FROM users WHERE teleid = {user_id}")
     result = mycursor.fetchone()
     if not result:
-        mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant) VALUES ({user_id}, '{user_name}', False, False)")
+        mycursor.execute(f"INSERT INTO users(teleid, username, isActive, isWant, chat) VALUES ({user_id}, '{user_name}', False, False, 0)")
         mydb.commit()
     else:
         pass
@@ -39,20 +39,33 @@ def start(message):
 
 def chatting(message):
     if message.text == "Начать":
+        user_id = message.from_user.id
         a = telebot.types.ReplyKeyboardRemove()
         bot.send_message(message.from_user.id, 'Ищем...', reply_markup=a)
-        mycursor.execute(f"SELECT teleid FROM users ")
+        mycursor.execute(f"UPDATE users SET isWant = True WHERE teleid = {user_id}")
+        mycursor.execute(f"SELECT teleid FROM users WHERE chat = 0, isWant = True, isActive = False, teleid != {user_id}")
         people = mycursor.fetchall()
-        global person
-        person = random.choice(people[0])
-        send = bot.send_message(message.from_user.id, 'Можете писать')
-        bot.register_next_step_handler(send, chat)
+        if not people:
+            service = telebot.types.ReplyKeyboardMarkup(True, True)
+            service.row('Начать')
+            send = bot.send_message(message.chat.id, f"Собеседник не найден! Попробуйте снова", reply_markup=service)
+            bot.register_next_step_handler(send, chatting)
+        else:
+            global person
+            person = random.choice(people[0])
+            send = bot.send_message(message.from_user.id, 'Можете писать')
+            bot.register_next_step_handler(send, chat)
 
 def chat(message):
-    service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('Закончить')
-    msg = bot.send_message(person, message.text)
-    bot.register_next_step_handler(msg, chat)
+    if message.text = "Закончить":
+        a = telebot.types.ReplyKeyboardRemove()
+        msg = bot.send_message(person, message.text, reply_markup=service)
+        bot.register_next_step_handler(msg, start)
+    else:
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Закончить')
+        msg = bot.send_message(person, message.text, reply_markup=service)
+        bot.register_next_step_handler(msg, chat)
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
