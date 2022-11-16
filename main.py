@@ -43,7 +43,8 @@ def create_chat(chat_one, chat_two):
     else:
         return False
 def get_active_chat(chat_id):
-    chat = mycursor.execute(f"SELECT * FROM chats WHERE chat_one = {chat_id}")
+    mycursor.execute(f"SELECT * FROM chats WHERE chat_one = {chat_id}")
+    chat = mycursor.fetchmany(1)
     id_chat = 0
     for row in chat:
         is_chat = row[0]
