@@ -26,7 +26,7 @@ def add_queue(chat_id):
     mycursor.execute(f"INSERT INTO queue(teleid) VALUES({chat_id})")
     mydb.commit()
 def delete_queue(chat_id):
-    mycursor.execute(f"DELETE * FROM queue WHERE teleid = {chat_id}")
+    mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}")
     mydb.commit()
 def get_chat():
     mycursor.execute("SELECT * FROM queue")
@@ -38,7 +38,7 @@ def get_chat():
         return False
 def create_chat(chat_one, chat_two):
     if chat_two != 0:
-        mycursor.execute(f"DELETE * FROM queue WHERE teleid = {chat_two}")
+        mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_two}")
         mycursor.execute(f"INSERT INTO chats(chat_one, chat_two) VALUES({chat_one}, {chat_two})")
         return True
     else:
