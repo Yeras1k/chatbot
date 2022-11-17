@@ -113,9 +113,9 @@ def bot_message(message):
         elif message.text == 'Остановить поиск':
             delete_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
-    else:
-        chat_info = get_active_chat(message.chat.id)
-        bot.send_message(chat_info[1], message.text)
+        else:
+            chat_info = get_active_chat(message.chat.id)
+            bot.send_message(chat_info[1], message.text)
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])
