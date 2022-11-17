@@ -107,6 +107,7 @@ def bot_message(message):
                 mess = f'Собеседник найден! Нажмите /stop чтоб закончить диалог {chat_two}'
                 service = telebot.types.ReplyKeyboardMarkup(True, True)
                 service.row('/stop')
+                delete_queue(chat_two)
                 bot.send_message(message.chat.id, mess, reply_markup = service)
                 bot.send_message(chat_two, mess, reply_markup = service)
         elif message.text == 'Остановить поиск':
