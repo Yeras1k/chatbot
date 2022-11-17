@@ -89,10 +89,10 @@ def stop(message):
         delete_chat(chat_info[0])
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Поиск собеседника')
-        bot.send_message(chat_info[1], 'Собеседник покунул чат', reply_markup = service)
         bot.send_message(message.chat.id, 'Вы вышли из чата', reply_markup = service)
+        bot.send_message(chat_info[1], 'Собеседник покунул чат', reply_markup = service)
     else:
-        bot.send_message(message.chat.id, 'Вы не создавали чат', reply_markup = service)
+        bot.send_message(message.chat.id, 'Вы не создавали чат')
 
 @bot.message_handler(content_types=["text"])
 def bot_message(message):
