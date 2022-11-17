@@ -51,9 +51,10 @@ def get_active_chat(chat_id):
         id_chat = row[0]
         chat_info = [row[0], row[2]]
     if id_chat == 0:
-        chat = mycursor.execute(f"SELECT * FROM chats WHERE chat_two = {chat_id}")
+        mycursor.execute(f"SELECT * FROM chats WHERE chat_two = {chat_id}")
+        chat = mycursor.fetchall()
         for row in chat:
-            is_chat = row[0]
+            id_chat = row[0]
             chat_info = [row[0], row[1]]
         if id_chat == 0:
             return False
