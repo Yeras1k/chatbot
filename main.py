@@ -118,7 +118,7 @@ def bot_message(message):
             name = raw+".jpg"
             img = open(name, 'rb')
             chat_info = get_active_chat(message.chat.id)
-            bot.send_message(chat_info[1], img)
+            bot.send_photo(chat_info[1], img)
         else:
             chat_info = get_active_chat(message.chat.id)
             bot.send_message(chat_info[1], message.text)
