@@ -94,7 +94,7 @@ def stop(message):
     else:
         bot.send_message(message.chat.id, 'Вы не создавали чат')
 
-@bot.message_handler(content_types=["text"])
+@bot.message_handler(content_types=["text", "photo"])
 def bot_message(message):
     if message.chat.type == 'private':
         if message.text == 'Поиск собеседника':
@@ -113,6 +113,12 @@ def bot_message(message):
         elif message.text == 'Остановить поиск':
             delete_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
+        elif message.content_type == "photo":
+            raw = message.photo[2].file_id
+            name = raw+".jpg"
+            img = open(name, 'rb')
+            chat_info = get_active_chat(message.chat.id)
+            bot.send_message(chat_info[1], img)
         else:
             chat_info = get_active_chat(message.chat.id)
             bot.send_message(chat_info[1], message.text)
