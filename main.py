@@ -114,7 +114,7 @@ def bot_message(message):
             delete_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
         elif message.content_type == "photo":
-            raw = message.photo[2].file_id
+            raw = message.photo[-1].file_id
             name = raw+".jpg"
             img = open(name, 'rb')
             chat_info = get_active_chat(message.chat.id)
