@@ -114,8 +114,12 @@ def bot_message(message):
             delete_queue(message.chat.id)
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
         elif message.content_type == "photo":
-            raw = message.photo[-1].file_id
+            raw = message.photo[2].file_id
             name = raw+".jpg"
+            file_info = bot.get_file(raw)
+            downloaded_file = bot.download_file(file_info.file_path)
+            with open(name,'wb') as new_file:
+                new_file.write(downloaded_file)
             img = open(name, 'rb')
             chat_info = get_active_chat(message.chat.id)
             bot.send_photo(chat_info[1], img)
