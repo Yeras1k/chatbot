@@ -39,7 +39,7 @@ def delete_queue(chat_id, n):
         k = 1
     mycursor.execute(f"DELETE FROM queu{c} WHERE teleid = {chat_id}")
     mydb.commit()
-    mycursor.execute(f"UPDATE just SET which = {k} WHERE id = {chat_id}")
+    mycursor.execute(f"UPDATE just SET which = {k} WHERE teleid = {chat_id}")
     mydb.commit()
 def get_chat():
     mycursor.execute("SELECT teleid FROM queue")
@@ -82,10 +82,10 @@ def delete_chat(id_chat):
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    mycursor.execute(f"SELECT which FROM just WHERE id = {message.chat.id}")
+    mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
     result = mycursor.fetchmany(1)
     if not result:
-        mycursor.execute(f"INSERT INTO just(id, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
+        mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
     else:
         delete_queue(message.chat.id, result)
         user_name = message.from_user.username
@@ -116,7 +116,7 @@ def stop(message):
 def bot_message(message):
     if message.chat.type == 'private':
         if message.text == 'Поиск собеседника':
-            mycursor.execute(f"SELECT which FROM just WHERE id = {message.chat.id}")
+            mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
             result = mycursor.fetchmany(1)
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
