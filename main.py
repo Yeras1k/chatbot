@@ -23,11 +23,23 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 
-def add_queue(chat_id):
-    mycursor.execute(f"INSERT INTO queue(teleid) VALUES({chat_id})")
+def add_queue(chat_id, n):
+    if n == 1:
+        c = 'e2'
+    else:
+        c = 'e'
+    mycursor.execute(f"INSERT INTO queu{c}(teleid) VALUES({chat_id})")
     mydb.commit()
-def delete_queue(chat_id):
-    mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_id}")
+def delete_queue(chat_id, n):
+    if n == 1:
+        c = 'e'
+        k = 2
+    else:
+        c = 'e2'
+        k = 1
+    mycursor.execute(f"DELETE FROM queu{c} WHERE teleid = {chat_id}")
+    mydb.commit()
+    mycursor.execute(f"UPDATE just SET which = {k} WHERE teleid = {chat_id}")
     mydb.commit()
 def get_chat():
     mycursor.execute("SELECT teleid FROM queue")
@@ -37,7 +49,7 @@ def get_chat():
             return(row[0])
     else:
         return False
-def create_chat(chat_one, chat_two):
+def create_chat(chat_one, chat_two, n):
     if chat_two != 0:
         mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_two}")
         mycursor.execute(f"INSERT INTO chats(chat_one, chat_two) VALUES({chat_one}, {chat_two})")
@@ -70,11 +82,16 @@ def delete_chat(id_chat):
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    delete_queue(message.chat.id)
-    user_name = message.from_user.username
-    service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('Поиск собеседника')
-    bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника".format(message.from_user), reply_markup = service)
+    mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
+    result = mycursor.fetchmany(1)
+    if not result:
+        mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
+    else:
+        delete_queue(message.chat.id, result)
+        user_name = message.from_user.username
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Поиск собеседника')
+        bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника".format(message.from_user), reply_markup = service)
 
 
 @bot.message_handler(commands=["menu"])
@@ -99,11 +116,13 @@ def stop(message):
 def bot_message(message):
     if message.chat.type == 'private':
         if message.text == 'Поиск собеседника':
+            mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
+            result = mycursor.fetchmany(1)
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
             chat_two = get_chat()
             if create_chat(message.chat.id, chat_two) == False:
-                add_queue(message.chat.id)
+                add_queue(message.chat.id, result)
                 bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
             else:
                 mess = f'Собеседник найден! Нажмите /stop чтоб закончить диалог'
