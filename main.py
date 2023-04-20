@@ -138,7 +138,7 @@ def bot_message(message):
             result = mycursor.fetchmany(1)
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
-            chat_two = get_chat(result)
+            chat_two = get_chat(result[0][0])
             if create_chat(message.chat.id, chat_two, result[0][0]) == False:
                 add_queue(message.chat.id, result[0][0])
                 bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
