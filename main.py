@@ -101,7 +101,7 @@ def start(message):
     if not result:
         mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
     else:
-        delete_queue(message.chat.id, result)
+        delete_queue(message.chat.id, result[0][0])
         user_name = message.from_user.username
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Поиск собеседника')
@@ -139,8 +139,8 @@ def bot_message(message):
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
             chat_two = get_chat(result)
-            if create_chat(message.chat.id, chat_two, result) == False:
-                add_queue(message.chat.id, result)
+            if create_chat(message.chat.id, chat_two, result[0][0]) == False:
+                add_queue(message.chat.id, result[0][0])
                 bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
             else:
                 mess = f'Собеседник найден! Нажмите /stop чтоб закончить диалог'
@@ -151,7 +151,7 @@ def bot_message(message):
         elif message.text == 'Остановить поиск':
             mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
             result = mycursor.fetchmany(1)
-            delete_queue(message.chat.id, result)
+            delete_queue(message.chat.id, result[0][0])
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
         elif message.content_type == "photo":
             raw = message.photo[2].file_id
