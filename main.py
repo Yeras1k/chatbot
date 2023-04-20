@@ -93,6 +93,18 @@ def delete_chat(id_chat):
     mycursor.execute(f"DELETE FROM chats WHERE id = {id_chat}")
     mydb.commit()
 
+@bot.message_handler(commands=["epta"])
+def start(message):
+    mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
+    result = mycursor.fetchmany(1)
+    if not result:
+        mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
+    else:
+        delete_queue(message.chat.id, result[0][0])
+        user_name = message.from_user.username
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Поиск собеседника')
+        bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника".format(message.from_user), reply_markup = service)
 
 @bot.message_handler(commands=["start"])
 def start(message):
