@@ -29,6 +29,7 @@ def changer(chat_id, n):
         c = 1
     mycursor.execute(f"UPDATE just SET which = {c} WHERE teleid = {chat_id}")
     mydb.commit()
+    
 def add_queue(chat_id, n):
     if n == 1:
         c = 'e'
@@ -36,6 +37,7 @@ def add_queue(chat_id, n):
         c = 'e2'
     mycursor.execute(f"INSERT INTO queu{c}(teleid) VALUES({chat_id})")
     mydb.commit()
+
 def delete_queue(chat_id, n):
     if n == 1:
         c = 'e'
@@ -43,6 +45,7 @@ def delete_queue(chat_id, n):
         c = 'e2'
     mycursor.execute(f"DELETE FROM queu{c} WHERE teleid = {chat_id}")
     mydb.commit()
+
 def get_chat(n):
     if n == 1:
         c = 'e'
@@ -57,6 +60,7 @@ def get_chat(n):
             return(row[0])
     else:
         return 0
+    
 def create_chat(chat_one, chat_two, n):
     if n == 1:
         c = 'e'
@@ -70,6 +74,7 @@ def create_chat(chat_one, chat_two, n):
         return True
     else:
         return False
+    
 def get_active_chat(chat_id):
     mycursor.execute(f"SELECT * FROM chats WHERE chat_one = {chat_id}")
     chat = mycursor.fetchall()
