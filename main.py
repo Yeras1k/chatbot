@@ -125,6 +125,7 @@ def stop(message):
         service.row('Поиск собеседника')
         bot.send_message(message.chat.id, 'Вы вышли из чата', reply_markup = service)
         bot.send_message(chat_info[1], 'Собеседник покинул чат', reply_markup = service)
+        bot.send_message(message.chat.id, f'{result}', reply_markup = service)
         changer(message.chat.id, result)
     else:
         bot.send_message(message.chat.id, 'Вы не создавали чат')
