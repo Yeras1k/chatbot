@@ -25,9 +25,9 @@ mycursor = mydb.cursor()
 
 def add_queue(chat_id, n):
     if n == 1:
-        c = 'e2'
-    else:
         c = 'e'
+    else:
+        c = 'e2'
     mycursor.execute(f"INSERT INTO queu{c}(teleid) VALUES({chat_id})")
     mydb.commit()
 def delete_queue(chat_id, n):
@@ -54,7 +54,7 @@ def get_chat(n):
         for row in result:
             return(row[0])
     else:
-        return False
+        return 0
 def create_chat(chat_one, chat_two, n):
     if n == 1:
         c = 'e'
@@ -143,7 +143,9 @@ def bot_message(message):
                 bot.send_message(message.chat.id, mess, reply_markup = service)
                 bot.send_message(chat_two, mess, reply_markup = service)
         elif message.text == 'Остановить поиск':
-            delete_queue(message.chat.id)
+            mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
+            result = mycursor.fetchmany(1)
+            delete_queue(message.chat.id, result)
             bot.send_message(message.chat.id, 'Поиск остановлен! Нажмите /menu')
         elif message.content_type == "photo":
             raw = message.photo[2].file_id
