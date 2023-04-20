@@ -100,6 +100,7 @@ def start(message):
     result = mycursor.fetchmany(1)
     mycursor.execute(f"SELECT name FROM names WHERE teleid = {message.chat.id}")
     result2 = mycursor.fetchmany(1)
+    bot.send_message(message.chat.id, f'{result2}')
     # if not result:
     #     mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
     if not result2:
