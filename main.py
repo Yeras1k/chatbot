@@ -98,14 +98,18 @@ def delete_chat(id_chat):
 def start(message):
     mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
     result = mycursor.fetchmany(1)
-    if not result:
-        mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
-    else:
-        delete_queue(message.chat.id, result[0][0])
-        user_name = message.from_user.username
-        service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('Поиск собеседника')
-        bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника".format(message.from_user), reply_markup = service)
+    mycursor.execute(f"SELECT name FROM names WHERE teleid = {message.chat.id}")
+    result2 = mycursor.fetchmany(1)
+    # if not result:
+    #     mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
+    if not result2:
+        mycursor.execute(f"INSERT INTO names(teleid, name) VALUES({message.chat.id}, '{message.from_user.first_name}')")
+    # else:
+        # delete_queue(message.chat.id, result[0][0])
+        # user_name = message.from_user.username
+        # service = telebot.types.ReplyKeyboardMarkup(True, True)
+        # service.row('Поиск собеседника')
+        # bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника".format(message.from_user), reply_markup = service)
 
 
 @bot.message_handler(commands=["menu"])
