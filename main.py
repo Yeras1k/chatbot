@@ -41,8 +41,14 @@ def delete_queue(chat_id, n):
     mydb.commit()
     mycursor.execute(f"UPDATE just SET which = {k} WHERE teleid = {chat_id}")
     mydb.commit()
-def get_chat():
-    mycursor.execute("SELECT teleid FROM queue")
+def get_chat(n):
+    if n == 1:
+        c = 'e'
+        k = 2
+    else:
+        c = 'e2'
+        k = 1
+    mycursor.execute(f"SELECT teleid FROM queu{c}")
     result = mycursor.fetchmany(1)
     if len(result) > 0:
         for row in result:
@@ -50,8 +56,14 @@ def get_chat():
     else:
         return False
 def create_chat(chat_one, chat_two, n):
+    if n == 1:
+        c = 'e'
+        k = 2
+    else:
+        c = 'e2'
+        k = 1
     if chat_two != 0:
-        mycursor.execute(f"DELETE FROM queue WHERE teleid = {chat_two}")
+        mycursor.execute(f"DELETE FROM queu{c} WHERE teleid = {chat_two}")
         mycursor.execute(f"INSERT INTO chats(chat_one, chat_two) VALUES({chat_one}, {chat_two})")
         return True
     else:
@@ -120,8 +132,8 @@ def bot_message(message):
             result = mycursor.fetchmany(1)
             service = telebot.types.ReplyKeyboardMarkup(True, True)
             service.row('Остановить поиск')
-            chat_two = get_chat()
-            if create_chat(message.chat.id, chat_two) == False:
+            chat_two = get_chat(result)
+            if create_chat(message.chat.id, chat_two, result) == False:
                 add_queue(message.chat.id, result)
                 bot.send_message(message.chat.id, 'Идет поиск', reply_markup = service)
             else:
