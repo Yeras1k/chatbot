@@ -181,6 +181,24 @@ def bot_message(message):
             img = open(name, 'rb')
             chat_info = get_active_chat(message.chat.id)
             bot.send_photo(chat_info[1], img)
+        elif message.text[:1] == '-':
+            mycursor.execute(f"SELECT teleid FROM names WHERE name = {message.text[1:]}")
+            result = mycursor.fetchmany(1)
+            if not result:
+                bot.send_message(message.chat.id, 'такого игрока нет')
+            else:
+                if result[0][0] == chat_info[1]:
+                    chat_info = get_active_chat(message.chat.id)
+                    if chat_info != False:
+                        delete_chat(chat_info[0])
+                        mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
+                        result = mycursor.fetchmany(1)
+                        service = telebot.types.ReplyKeyboardMarkup(True, True)
+                        service.row('Поиск собеседника')
+                        bot.send_message(message.chat.id, 'Ты угадал!!!', reply_markup = service)
+                        bot.send_message(chat_info[1], 'Собеседник узнал вас', reply_markup = service)
+                        bot.send_message(message.chat.id, f'{result[0][0]}', reply_markup = service)
+                        changer(message.chat.id, result[0][0])
         else:
             chat_info = get_active_chat(message.chat.id)
             bot.send_message(chat_info[1], message.text)
