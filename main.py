@@ -62,6 +62,7 @@ def get_chat(n):
         return 0
     
 def create_chat(chat_one, chat_two, n):
+    bot.send_message(chat_one, f'{n}')
     if n == 1:
         c = 'e'
         k = 2
