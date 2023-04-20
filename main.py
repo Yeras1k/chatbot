@@ -22,7 +22,13 @@ mydb = mysql.connector.connect(
 )
 mycursor = mydb.cursor()
 
-
+def changer(chat_id, n):
+    if n == 1:
+        c = 2
+    else:
+        c = 1
+    mycursor.execute(f"UPDATE just SET which = {c} WHERE teleid = {chat_id}")
+    mydb.commit()
 def add_queue(chat_id, n):
     if n == 1:
         c = 'e'
@@ -33,13 +39,9 @@ def add_queue(chat_id, n):
 def delete_queue(chat_id, n):
     if n == 1:
         c = 'e'
-        k = 2
     else:
         c = 'e2'
-        k = 1
     mycursor.execute(f"DELETE FROM queu{c} WHERE teleid = {chat_id}")
-    mydb.commit()
-    mycursor.execute(f"UPDATE just SET which = {k} WHERE teleid = {chat_id}")
     mydb.commit()
 def get_chat(n):
     if n == 1:
@@ -117,10 +119,13 @@ def stop(message):
     chat_info = get_active_chat(message.chat.id)
     if chat_info != False:
         delete_chat(chat_info[0])
+        mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
+        result = mycursor.fetchmany(1)
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Поиск собеседника')
         bot.send_message(message.chat.id, 'Вы вышли из чата', reply_markup = service)
-        bot.send_message(chat_info[1], 'Собеседник покунул чат', reply_markup = service)
+        bot.send_message(chat_info[1], 'Собеседник покинул чат', reply_markup = service)
+        changer(message.chat.id, result)
     else:
         bot.send_message(message.chat.id, 'Вы не создавали чат')
 
