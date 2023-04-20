@@ -29,7 +29,7 @@ def changer(chat_id, n):
         c = 1
     mycursor.execute(f"UPDATE just SET which = {c} WHERE teleid = {chat_id}")
     mydb.commit()
-    
+
 def add_queue(chat_id, n):
     if n == 1:
         c = 'e'
@@ -187,7 +187,7 @@ def bot_message(message):
             chat_info = get_active_chat(message.chat.id)
             bot.send_photo(chat_info[1], img)
         elif message.text[:1] == '-':
-            mycursor.execute(f"SELECT teleid FROM names WHERE name = {message.text[1:]}")
+            mycursor.execute(f'SELECT teleid FROM names WHERE name = "{message.text[1:]}"')
             result = mycursor.fetchmany(1)
             if not result:
                 bot.send_message(message.chat.id, 'такого игрока нет')
