@@ -120,7 +120,7 @@ def stop(message):
     if chat_info != False:
         delete_chat(chat_info[0])
         mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
-        result = mycursor.fetchmany(1)
+        result = mycursor.fetchone(0)
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Поиск собеседника')
         bot.send_message(message.chat.id, 'Вы вышли из чата', reply_markup = service)
