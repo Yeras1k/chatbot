@@ -94,6 +94,7 @@ def get_active_chat(chat_id):
             return chat_info
     else:
         return chat_info
+    
 def delete_chat(id_chat):
     mycursor.execute(f"DELETE FROM chats WHERE id = {id_chat}")
     mydb.commit()
