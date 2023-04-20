@@ -105,6 +105,7 @@ def start(message):
     #     mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
     if not result2:
         mycursor.execute(f"INSERT INTO names(teleid, name) VALUES({message.chat.id}, '{message.from_user.first_name}')")
+        mydb.commit()
     # else:
         # delete_queue(message.chat.id, result[0][0])
         # user_name = message.from_user.username
