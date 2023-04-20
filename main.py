@@ -192,6 +192,7 @@ def bot_message(message):
             if not result:
                 bot.send_message(message.chat.id, 'такого игрока нет')
             else:
+                chat_info = get_active_chat(message.chat.id)
                 if result[0][0] == chat_info[1]:
                     chat_info = get_active_chat(message.chat.id)
                     if chat_info != False:
