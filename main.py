@@ -102,23 +102,29 @@ def delete_chat(id_chat):
     mycursor.execute(f"DELETE FROM chats WHERE id = {id_chat}")
     mydb.commit()
 
-@bot.message_handler(commands=["epta"])
+@bot.message_handler(commands=["start"])
 def start(message):
     mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
     result = mycursor.fetchmany(1)
+    mycursor.execute(f'SELECT teleid FROM scores WHERE teleid = {message.chat.id}')
+    result2 = mycursor.fetchmany(1)
     if not result:
         mycursor.execute(f"INSERT INTO just(teleid, which) VALUES({message.chat.id}, {random.randint(1, 2)})")
+        mydb.commit()
     else:
         delete_queue(message.chat.id, result[0][0])
         user_name = message.from_user.username
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Поиск собеседника')
         bot.send_message(message.chat.id, f"Привет, {user_name}! Это анонимный чат бот. Нажмите кнопку ниже, чтоб начать поиск собеседника".format(message.from_user), reply_markup = service)
+    if not result2:
+        mycursor.execute(f"SELECT name FROM names WHERE teleid = {message.chat.id}")
+        name = mycursor.fetchmany(1)
+        mycursor.execute(f'INSERT INTO scores(teleid, name, score) VALUES({message.chat.id}, "{name[0][0]}", 0)')
+        mydb.commit()
 
-@bot.message_handler(commands=["start"])
+@bot.message_handler(commands=["addme"])
 def start(message):
-    mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
-    result = mycursor.fetchmany(1)
     mycursor.execute(f"SELECT name FROM names WHERE teleid = {message.chat.id}")
     result2 = mycursor.fetchmany(1)
     bot.send_message(message.chat.id, f'{result2}')
@@ -206,7 +212,21 @@ def bot_message(message):
                         service = telebot.types.ReplyKeyboardMarkup(True, True)
                         service.row('Поиск собеседника')
                         bot.send_message(message.chat.id, 'Ты угадал!!!', reply_markup = service)
+                        mycursor.execute(f"UPDATE scores SET score = score + 3 WHERE teleid = {chat_info[0]}")
+                        mydb.commit()
                         bot.send_message(chat_info[1], 'Собеседник узнал вас', reply_markup = service)
+                        changer(message.chat.id, result[0][0])
+                else:
+                    if chat_info != False:
+                        delete_chat(chat_info[0])
+                        mycursor.execute(f"SELECT which FROM just WHERE teleid = {message.chat.id}")
+                        result = mycursor.fetchmany(1)
+                        service = telebot.types.ReplyKeyboardMarkup(True, True)
+                        service.row('Поиск собеседника')
+                        bot.send_message(message.chat.id, 'Ты не угадал!!!', reply_markup = service)
+                        mycursor.execute(f"UPDATE scores SET score = score - 1 WHERE teleid = {chat_info[0]}")
+                        mydb.commit()
+                        bot.send_message(chat_info[1], 'Собеседник не узнал вас', reply_markup = service)
                         changer(message.chat.id, result[0][0])
         else:
             chat_info = get_active_chat(message.chat.id)
