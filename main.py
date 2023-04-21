@@ -71,7 +71,9 @@ def create_chat(chat_one, chat_two, n):
         k = 1
     if chat_two != 0:
         mycursor.execute(f"DELETE FROM queu{c} WHERE teleid = {chat_two}")
+        mydb.commit()
         mycursor.execute(f"INSERT INTO chats(chat_one, chat_two) VALUES({chat_one}, {chat_two})")
+        mydb.commit()
         return True
     else:
         return False
