@@ -207,7 +207,6 @@ def bot_message(message):
                         service.row('Поиск собеседника')
                         bot.send_message(message.chat.id, 'Ты угадал!!!', reply_markup = service)
                         bot.send_message(chat_info[1], 'Собеседник узнал вас', reply_markup = service)
-                        bot.send_message(message.chat.id, f'{result[0][0]}', reply_markup = service)
                         changer(message.chat.id, result[0][0])
         else:
             chat_info = get_active_chat(message.chat.id)
